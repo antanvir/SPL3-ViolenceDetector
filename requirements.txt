@@ -1,1 +1,1 @@
-
+# To activate venv in windows =  .\spl3-env\Scripts\activate

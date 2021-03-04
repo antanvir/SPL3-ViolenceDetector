@@ -1,26 +1,37 @@
 import logo from './logo.svg';
 import './App.css';
 
-import React, { useState, useEffect } from 'react';
-import YouTubeIcon from '@material-ui/icons/YouTube';
-import FolderIcon from '@material-ui/icons/Folder';
 import Input from '@material-ui/core/Input';
+import FolderIcon from '@material-ui/icons/Folder';
+import YouTubeIcon from '@material-ui/icons/YouTube';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import ReactPlayer from 'react-player';
 
+import ReactPlayer from 'react-player';
+import React, { useState } from 'react';
+import captureVideoFrame from "capture-video-frame";
+
+
+const styles = {
+  videoPlayer: { backgroundColor: 'rgb(20, 10, 20)', borderRadius: '5px', display: 'block', 
+                margin: '16px auto', padding: '10px 10px', height: '40vh', width: '80vw' },
+}
 
 function App() {
   const [filepath, setVideoFileUrl] = useState("");
   const [videoType, setVideoType] = useState("folder");
+  const [player, setPlayer] = useState(null);
+
 
   const onInputChangeHandler = event => {
     if(videoType == "folder"){
       const { files } = event.target;
+      console.log(files[0]);
+      
       let reader = new FileReader();
       reader.readAsDataURL(files[0]);
-  
       reader.onload = (event) => {
+        // console.log(event.target.result);
         setVideoFileUrl(event.target.result);
       }
     }else{
@@ -30,6 +41,7 @@ function App() {
         setVideoFileUrl(event.target.value);
       }
     }
+    
   }
 
   const handleVideoTypeChange = (event, currentVideoType) => {
@@ -46,10 +58,17 @@ function App() {
     setVideoType(currentVideoType);
   }
 
-  const styles = {
-    videoPlayer: { backgroundColor: 'rgb(20, 10, 20)', borderRadius: '5px', display: 'block', 
-            margin: '16px auto', padding: '10px 10px', height: '40vh', width: '80vw' },
-}
+  const onVideoBeingReadyToPlay = (event) => {
+    // When you want to record the image 
+    console.log(player.getInternalPlayer());
+    const frame = captureVideoFrame(player.getInternalPlayer(), "png");
+    console.log(frame);
+    // Show the image
+    const frameImage = document.getElementById("frame-image");
+    frameImage.setAttribute("src", frame.dataUri);
+  }
+
+
 
   return (
     <div className="App">
@@ -77,7 +96,26 @@ function App() {
       </div>
 
       <div>
-        <ReactPlayer style={ styles.videoPlayer } url={ filepath } controls={true} />
+        <ReactPlayer 
+          id="videoPlayer" 
+          style={ styles.videoPlayer } 
+          url={ filepath } 
+          controls={ true } 
+          ref={ player => { setPlayer(player); } }
+          config={{ 
+            file: { 
+              attributes: {
+                crossOrigin: 'anonymous'
+              }
+            }
+          }}
+          onPlay={ onVideoBeingReadyToPlay }
+        />
+      </div>
+      
+
+      <div>
+        <img id="frame-image" value="check" />
       </div>
 
     </div>

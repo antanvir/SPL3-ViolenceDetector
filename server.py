@@ -20,6 +20,7 @@ def post_video():
     videoPath = request.form['videoPath']
     hasVideo = request.form['hasVideo']
     print("= POST DATA =\nType: ", videoType, "\nURL: ",  videoPath, "\nIncludes_Video: ", hasVideo)
+    
     if hasVideo == "true":
         print("= Request has Video file =\n")
         video_file = request.files['file']

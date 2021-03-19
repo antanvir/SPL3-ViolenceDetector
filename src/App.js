@@ -24,26 +24,27 @@ function App() {
 
 
 	const onInputChangeHandler = event => {
-		let post_data = {
-			videoType: "",
-			videoPath: "",
-			video: null
-		}
 		if(videoType == "folderFile"){
 			const { files } = event.target;
 			console.log(files[0]);
-			
+
 			let reader = new FileReader();
 			reader.readAsDataURL(files[0]);
 			reader.onload = (event) => {
 				// console.log(event.target.result);
 				setVideoFileUrl(event.target.result);
 
-				post_data["videoType"] = videoType;
-				post_data["videoPath"] = "";
-				post_data["video"] = event.target.result;
+				let form_data = new FormData();
+				form_data.append("videoType", videoType);
+				form_data.append("videoPath", "");
+				form_data.append("hasVideo", true);
+				form_data.append("file", files[0]);
 
-				axios.post('http://localhost:5000/video', post_data)
+				axios.post('http://localhost:5000/video', form_data, {
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					}
+				})
 				.then((response) => {
 					console.log(response);
 				})
@@ -58,38 +59,24 @@ function App() {
 			if (videoPlayable) {   
 				setVideoFileUrl(event.target.value);
 
-				post_data["videoType"] = videoType;
-				post_data["videoPath"] = event.target.value;
-				post_data["video"] = null;
+				let form_data = new FormData();
+				form_data.append("videoType", videoType);
+				form_data.append("videoPath", event.target.value);
+				form_data.append("hasVideo", false);				
 
-				axios.post('http://localhost:5000/video', post_data)
+				axios.post('http://localhost:5000/video', form_data, {
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					}
+				})
 				.then((response) => {
 					console.log(response);
 				})
 				.catch((error) => {
 					console.log(error);
 				});
-				// axios.post('http://localhost:5000/video', {
-				// 	videoType: videoType,
-				// 	videoPath: event.target.value,
-				// 	video: null
-				// })
-				// .then((response) => {
-				// 	console.log(response);
-				// })
-				// .catch((error) => {
-				// 	console.log(error);
-				// });
 			}
 		}
-
-		// axios.post('http://localhost:5000/video', post_data)
-		// 	.then((response) => {
-		// 		console.log(response);
-		// 	})
-		// 	.catch((error) => {
-		// 		console.log(error);
-		// 	});
 		
 	}
 

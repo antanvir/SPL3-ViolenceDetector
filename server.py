@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
+from os import path
 
 from violence_detector import ViolenceDetector
 
@@ -15,11 +16,20 @@ def get_example():
 
 @app.route("/video", methods=["POST"])
 def post_video():
-    req_data = request.get_json()
-    print("= POST DATA =\n", req_data['videoType'], "\n",  req_data['videoPath'], "\n", req_data['video'] != None)
+    videoType = request.form['videoType']
+    videoPath = request.form['videoPath']
+    hasVideo = request.form['hasVideo']
+    print("= POST DATA =\nType: ", videoType, "\nURL: ",  videoPath, "\nIncludes_Video: ", hasVideo)
+    if hasVideo == "true":
+        print("= Request has Video file =\n")
+        video_file = request.files['file']
+        if video_file.filename != "":
+            filepath = path.join("sample", video_file.filename)
+            video_file.save(filepath)
+            videoPath = filepath
 
     detector = ViolenceDetector()
-    detector.check_for_violence(req_data['videoType'], req_data['videoPath'])
+    detector.check_for_violence(videoType, videoPath)
     
     return jsonify(message="POST request response returned")
 

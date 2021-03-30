@@ -25,6 +25,8 @@ def post_video():
         print("= Request has Video file =\n")
         video_file = request.files['file']
         if video_file.filename != "":
+            if not path.exists('sample'):
+                os.makedirs('sample')
             filepath = path.join("sample", video_file.filename)
             video_file.save(filepath)
             videoPath = filepath

@@ -165,29 +165,30 @@ function App() {
 			)
 		}
 
-		<div>
-			<Accordion style={ styles.timeStamps }>
-				<AccordionSummary
-					expandIcon={<ExpandMoreIcon style={ {color: "white"} } />}
-				>
-					<Typography> Timestamps of Detected Violence(s) </Typography>
-				</AccordionSummary>
-				<AccordionDetails style={ {backgroundColor: '', display: 'block'} }>
-					<hr/>
-					<Typography>
-						<p style={ {display: 'flex'} }> <b> Between Minutes: </b></p>
-						{ minutes.map( time => {
-							return (
-								<p style={ {display: 'flex'} }> { time } and { time + 1 } </p>
-							);
-							})
-						}
-						{/* Minute: 0-1
-						Minute: 2-3 */}
-					</Typography>
-				</AccordionDetails>
-			</Accordion>
-		</div>
+		{ (minutes.length !== 0) && (
+			<div>
+				<Accordion style={ styles.timeStamps }>
+					<AccordionSummary
+						expandIcon={<ExpandMoreIcon style={ {color: "white"} } />}
+					>
+						<Typography> Timestamps of Detected Violence(s) </Typography>
+					</AccordionSummary>
+					<AccordionDetails style={ {backgroundColor: '', display: 'block'} }>
+						<hr/>
+						<Typography>
+							<p style={ {display: 'flex'} }> <b> Between Minutes: </b></p>
+							{ minutes.map( time => {
+								return (
+									<p style={ {display: 'flex'} }> { time } and { time + 1 } </p>
+								);
+								})
+							}
+						</Typography>
+					</AccordionDetails>
+				</Accordion>
+			</div>
+		
+		)}
 
 		</div>
 	);

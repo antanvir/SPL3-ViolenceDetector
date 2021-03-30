@@ -1,0 +1,18 @@
+## BLOG: https://www.geeksforgeeks.org/creating-python-virtual-environment-windows-linux/ 
+##
+
+** Virtualenv installation & version check ** 
+>> pip install virtualenv
+>> virtualenv --version
+
+
+** New virtualenv creation ** 
+>> virtualenv spl3
+
+
+** Virtualenv activation ** 
+>> spl3\Scripts\activate
+
+
+** Virtualenv deactivation ** 
+>> deactivate

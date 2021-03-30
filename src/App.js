@@ -3,25 +3,43 @@ import './App.css';
 
 import Input from '@material-ui/core/Input';
 import FolderIcon from '@material-ui/icons/Folder';
+import Accordion from '@material-ui/core/Accordion';
 import YouTubeIcon from '@material-ui/icons/YouTube';
+import Typography from '@material-ui/core/Typography';
 import ToggleButton from '@material-ui/lab/ToggleButton';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import axios from 'axios';
 import ReactPlayer from 'react-player';
 import React, { useState } from 'react';
 
-
+let minutes = [ 0, 1 ];
+let borderColor = "lightslategrey";
 const styles = {
-  videoPlayer: { backgroundColor: 'rgb(20, 10, 20)', borderRadius: '5px', display: 'block', 
-                margin: '16px auto', padding: '10px 10px', height: '40vh', width: '80vw' },
+  	videoPlayer: { backgroundColor: 'rgb(20, 10, 20)', borderRadius: '5px', display: 'block', 
+                margin: '15px auto', padding: '10px 10px', height: '20vh', width: '80vw' },
+	result: { backgroundColor: 'white', borderRadius: '5px', border: `1px solid ${borderColor}`, display: 'inline-block', 
+                margin: '15px auto', padding: '05px 0px', width: '35vw'},
+	timeStamps: { backgroundColor: 'dimgray', color: 'white', borderRadius: '5px', border: '1px solid lightslategrey',  
+                margin: '15px auto', padding: '05px 0px', width: '35vw'},
 }
 
 function App() {
 	const [filepath, setVideoFileUrl] = useState("");
 	const [videoType, setVideoType] = useState("folderFile");
-	const [player, setPlayer] = useState(null);
-
+	// const [player, setPlayer] = useState(null);
+	const [inputStyles, setInputStyles] = useState(
+		{
+			youtubeIconColor: "",
+			folderIconColor: "primary",
+			inputType: "file",
+			inputPlaceHolder: "",
+		}
+	);
+	const [result, setResult] = useState("processing");
 
 	const onInputChangeHandler = event => {
 		if(videoType == "folderFile"){
@@ -81,16 +99,13 @@ function App() {
 	}
 
 	const handleVideoTypeChange = (event, currentVideoType) => {
-		if(currentVideoType == "youtubeFile"){
-			document.getElementById("youtube").style.color = "blue";
-			document.getElementById("folder").style.color = "gray";
-			document.getElementById("standard-basic").type = "text";
-			document.getElementById("standard-basic").placeholder = "Paste youtube video url";
-		}else{
-			document.getElementById("folder").style.color = "blue";
-			document.getElementById("youtube").style.color = "gray";
-			document.getElementById("standard-basic").type = "file";
-		}
+		let inputStyles = {};
+		inputStyles["youtubeIconColor"] = (currentVideoType == "youtubeFile") ?"primary" :"";
+		inputStyles["folderIconColor"] = (currentVideoType == "folderFile") ?"primary" :"";
+		inputStyles["inputType"] = (currentVideoType == "youtubeFile") ?"text" :"file";
+		inputStyles["inputPlaceHolder"] = (currentVideoType == "youtubeFile") ?"Paste youtube video url" :"";
+
+		setInputStyles(inputStyles);
 		setVideoType(currentVideoType);
 	}
 
@@ -106,19 +121,21 @@ function App() {
 			<hr/>
 		</div>
 
-		<div style={ {flexDirection: 'row'} }>
+		<div style={ {flexDirection: 'row', paddingTop: '10px'} }>
 			<b style={ {color: 'rgb(60, 70, 80)', paddingRight: '0.5em'} }>Paste Video URL From </b>
 
 			<ToggleButtonGroup size="small" value={videoType} exclusive onChange={handleVideoTypeChange} style={ {paddingRight: '0.6em'} }>
 			<ToggleButton value="folderFile">
-				<FolderIcon id="folder" fontSize="small" color="primary"/>
+				<FolderIcon id="folder" fontSize="small" color={ inputStyles.folderIconColor }/>
 			</ToggleButton>
 			<ToggleButton value="youtubeFile">
-				<YouTubeIcon id="youtube" fontSize="small" color="action" hover="Youtube"/>
+				<YouTubeIcon id="youtube" fontSize="small" color={ inputStyles.youtubeIconColor } hover="Youtube"/>
 			</ToggleButton>
 			</ToggleButtonGroup>
 
-			<Input id="standard-basic" type="file" name="videoFile" color="primary" onChange={onInputChangeHandler} />
+			<Input id="standard-basic" type={ inputStyles.inputType } name="videoFile" 
+			color="primary" placeholder={ inputStyles.inputPlaceHolder }
+			onChange={onInputChangeHandler} />
 		</div>
 
 		<div>
@@ -129,10 +146,47 @@ function App() {
 			controls={ true } 
 			/>
 		</div>
-		
+		{ (result === "processing") && (
+				<div style={ styles.result }>
+					<h3 style={ {color: "lightslategrey"} }> Processing Video... </h3>
+				</div>
+			)
+		}
+		{ (result === "non-violent") && (
+				<div style={ styles.result }>
+					<h3 style={ {color: borderColor} }> NOT VIOLENT </h3>
+				</div>
+			)
+		}
+		{ (result === "violent") && (
+				<div style={ styles.result }>
+					<h3 style={ {color: borderColor} }> VIOLENT </h3>
+				</div>
+			)
+		}
 
 		<div>
-			<img id="frame-image" value="check" />
+			<Accordion style={ styles.timeStamps }>
+				<AccordionSummary
+					expandIcon={<ExpandMoreIcon style={ {color: "white"} } />}
+				>
+					<Typography> Timestamps of Detected Violence(s) </Typography>
+				</AccordionSummary>
+				<AccordionDetails style={ {backgroundColor: '', display: 'block'} }>
+					<hr/>
+					<Typography>
+						<p style={ {display: 'flex'} }> <b> Between Minutes: </b></p>
+						{ minutes.map( time => {
+							return (
+								<p style={ {display: 'flex'} }> { time } and { time + 1 } </p>
+							);
+							})
+						}
+						{/* Minute: 0-1
+						Minute: 2-3 */}
+					</Typography>
+				</AccordionDetails>
+			</Accordion>
 		</div>
 
 		</div>

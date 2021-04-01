@@ -14,7 +14,7 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import axios from 'axios';
-import threeDots from 'three-dots';
+import ThreeDots from 'three-dots';
 import ReactPlayer from 'react-player';
 import React, { useState } from 'react';
 
@@ -22,15 +22,13 @@ import React, { useState } from 'react';
 // let borderColor = "lightslategrey";
 const styles = {
   	videoPlayer: { backgroundColor: 'rgb(20, 10, 20)', borderRadius: '5px', display: 'block', 
-                margin: '15px auto', padding: '10px 10px', width: '75vw' },
+                margin: '15px auto', padding: '10px 10px', width: '70vw' },
 	resultViolent: { backgroundColor: 'white', borderRadius: '5px', border: "1px solid red", display: 'inline-block', 
                 margin: '15px auto', padding: '05px 0px', width: '35vw'},
 	resultNonViolent: { backgroundColor: 'white', borderRadius: '5px', border: "1px solid green", display: 'inline-block', 
                 margin: '15px auto', padding: '05px 0px', width: '35vw'},
 	statusProcessing: { backgroundColor: 'white', borderRadius: '5px', border: "1px solid lightslategrey", display: 'inline-block', 
                 margin: '15px auto', padding: '05px 0px', width: '35vw'},
-	// timeStamps: { backgroundColor: 'dimgray', color: 'white', borderRadius: '5px', border: '1px solid lightslategrey',  
-    //             margin: '15px auto', padding: '05px 0px', width: '35vw'},
 }
 
 function App() {
@@ -44,7 +42,7 @@ function App() {
 			inputPlaceHolder: "",
 		}
 		);
-	const [resultStatus, setResultStatus] = useState("");
+	const [resultStatus, setResultStatus] = useState("processing");
 	const [timeOfViolence, setTimeOfViolence] = useState([]);
 	const [videoPlaying, setvideoPlaying] = useState(true);
 	
@@ -169,6 +167,7 @@ function App() {
 				<ReactPlayer 
 				id="videoPlayer" 
 				height= '45vh'
+				width= '95vh'
 				style={ styles.videoPlayer } 
 				url={ filepath } 
 				controls={ true } 
@@ -183,15 +182,15 @@ function App() {
 					 {/* This video has been detected as violent. <br/> 
 					 Hence, automatic playing is stopped. */}
 					 Automatic playing is Stopped as <br/>
-					 the video has been deteced as VIOLENT.
+					 the video has been detected as VIOLENT.
 				</p>
 				<button onClick={ startVideoPlaying }> I Understand & Wish to Proceed </button>
 			</div>
 		)}
 		{(resultStatus === "processing") && (
 				<div style={ styles.statusProcessing }>
-					<threeDots className="dot-collision" style={ { } } ></threeDots>
 					<h3 style={ {color: "lightslategrey", display: ""} }> Processing Video... </h3>
+					<p centre className="dot-pulse" style={ { textAlign: "center", margin: "05px auto"} } ></p>
 					
 				</div>
 		)}

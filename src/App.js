@@ -46,9 +46,9 @@ function App() {
 	const [timeOfViolence, setTimeOfViolence] = useState([]);
 	const [videoPlaying, setvideoPlaying] = useState(true);
 	
-	const restrictVideoPlaying = () => {
-		setvideoPlaying(false);
-	}
+	// const restrictVideoPlaying = () => {
+	// 	setvideoPlaying(false);
+	// }
 	const startVideoPlaying = () => {
 		setvideoPlaying(true);
 	}
@@ -207,9 +207,9 @@ function App() {
 
 		{ (timeOfViolence.length !== 0) && < ResultProvider timeOfViolence= {timeOfViolence} /> }
 
-		<div> 
+		{/* <div> 
 			<button onClick={ restrictVideoPlaying }> hide video </button>
-		</div>
+		</div> */}
 
 		<div>
 			<br/> <br/>

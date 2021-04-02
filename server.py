@@ -25,22 +25,18 @@ def post_video():
         
         if hasVideo == "true":
             video_file = request.files['file']
-            print("= Request has Video file = ", video_file.filename)
             if video_file.filename != "":
                 folderPath = path.join(path.dirname(path.abspath(__file__)), 'sample')
-                # folderExists = path.exists(path.join(path.dirname(path.abspath(__file__)), 'sample'))
-                print("HERE - 1")
                 if not path.exists(folderPath):
-                    print("HERE - 2")
                     os.makedirs(folderPath)
                 filepath = path.join(folderPath, video_file.filename)
                 video_file.save(filepath)
                 videoPath = filepath
-        print(videoPath)
         detector = ViolenceDetector()
-        resultType, timeOfViolence = detector.check_for_violence(videoType, videoPath)
-        
+        resultType, timeOfViolence = detector.check_for_violence(videoType, videoPath)      
         return jsonify({ "type": resultType, "timestamps": list(timeOfViolence) })
+        if hasVideo == "true":
+            os.remove(videoPath)
     except Exception as err:
         return jsonify({ "type": "error", "timestamps": [] })
 

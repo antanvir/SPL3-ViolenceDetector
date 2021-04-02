@@ -1,25 +1,18 @@
-// import logo from './logo.svg';
 import './App.css';
 import ResultProvider from './Result';
 
 import Input from '@material-ui/core/Input';
 import FolderIcon from '@material-ui/icons/Folder';
-// import Accordion from '@material-ui/core/Accordion';
 import YouTubeIcon from '@material-ui/icons/YouTube';
-// import Typography from '@material-ui/core/Typography';
 import ToggleButton from '@material-ui/lab/ToggleButton';
-// import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-// import AccordionSummary from '@material-ui/core/AccordionSummary';
-// import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import axios from 'axios';
 import ThreeDots from 'three-dots';
 import ReactPlayer from 'react-player';
-import React, { useState } from 'react';
+import React, { useState, useRef  } from 'react';
 
-// let minutes = [ 0, 1 ];
-// let borderColor = "lightslategrey";
+
 const styles = {
   	videoPlayer: { backgroundColor: 'rgb(20, 10, 20)', borderRadius: '5px', display: 'block', 
                 margin: '15px auto', padding: '10px 10px', width: '70vw' },
@@ -42,9 +35,11 @@ function App() {
 			inputPlaceHolder: "",
 		}
 		);
-	const [resultStatus, setResultStatus] = useState("processing");
+	const [resultStatus, setResultStatus] = useState("");
 	const [timeOfViolence, setTimeOfViolence] = useState([]);
 	const [videoPlaying, setvideoPlaying] = useState(true);
+
+	const playerRef = useRef(null);
 	
 	// const restrictVideoPlaying = () => {
 	// 	setvideoPlaying(false);
@@ -54,10 +49,10 @@ function App() {
 	}
 
 	const onInputChangeHandler = event => {
-		console.log("HERE HERE");
+		setvideoPlaying(true);
 		if(videoType == "folderFile"){
 			const { files } = event.target;
-			console.log(files[0]);
+			// console.log(files[0]);
 
 			let reader = new FileReader();
 			reader.readAsDataURL(files[0]);
@@ -165,6 +160,7 @@ function App() {
 		{(videoPlaying == true ) && (
 			<div>
 				<ReactPlayer 
+				ref={ playerRef }
 				id="videoPlayer" 
 				height= '45vh'
 				width= '95vh'
@@ -181,7 +177,7 @@ function App() {
 				<p style={ {color: "white", paddingTop: "1vh"} }>
 					 {/* This video has been detected as violent. <br/> 
 					 Hence, automatic playing is stopped. */}
-					 Automatic playing is Stopped as <br/>
+					 Automatic playing is STOPPED as <br/>
 					 the video has been detected as VIOLENT.
 				</p>
 				<button onClick={ startVideoPlaying }> I Understand & Wish to Proceed </button>
@@ -206,7 +202,8 @@ function App() {
 		)}
 
 		{ (timeOfViolence.length !== 0) && < ResultProvider timeOfViolence= {timeOfViolence} /> }
-
+		
+		{/*  EXTRA BUTTON FOR TESTING PURPOSE ONLY */}
 		{/* <div> 
 			<button onClick={ restrictVideoPlaying }> hide video </button>
 		</div> */}

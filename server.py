@@ -36,6 +36,7 @@ def post_video():
         resultType, timeOfViolence = detector.check_for_violence(videoType, videoPath)   
 
         if hasVideo == "true":
+            print("File should be REMOVED")
             os.remove(videoPath)
         response = jsonify({ "type": resultType, "timestamps": list(timeOfViolence) })
         response.headers.add('Access-Control-Allow-Origin', '*')

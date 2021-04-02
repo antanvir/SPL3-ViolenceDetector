@@ -37,10 +37,14 @@ def post_video():
 
         if hasVideo == "true":
             os.remove(videoPath)
-        return jsonify({ "type": resultType, "timestamps": list(timeOfViolence) })
-        
+        response = jsonify({ "type": resultType, "timestamps": list(timeOfViolence) })
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
     except Exception as err:
-        return jsonify({ "type": "error", "timestamps": [] })
+        response = jsonify({ "type": "error", "timestamps": [] })
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
 
 
 if __name__ == "__main__":

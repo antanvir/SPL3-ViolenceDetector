@@ -26,6 +26,7 @@ class ViolenceDetector:
         return (self.resultType, self.timeOfViolence)
 
 
+
     def prepareDataset(self, url):
         try:
             # initialize the HOG descriptor/person detector

@@ -33,10 +33,12 @@ def post_video():
                 video_file.save(filepath)
                 videoPath = filepath
         detector = ViolenceDetector()
-        resultType, timeOfViolence = detector.check_for_violence(videoType, videoPath)      
-        return jsonify({ "type": resultType, "timestamps": list(timeOfViolence) })
+        resultType, timeOfViolence = detector.check_for_violence(videoType, videoPath)   
+
         if hasVideo == "true":
             os.remove(videoPath)
+        return jsonify({ "type": resultType, "timestamps": list(timeOfViolence) })
+        
     except Exception as err:
         return jsonify({ "type": "error", "timestamps": [] })
 

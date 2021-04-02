@@ -16,3 +16,7 @@
 
 ** Virtualenv deactivation ** 
 >> deactivate
+
+
+** Heroku Logs **
+>> heroku logs --tail -a violence-detector-backend

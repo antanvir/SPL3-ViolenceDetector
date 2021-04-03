@@ -1,5 +1,6 @@
 import './App.css';
 import ResultProvider from './Result';
+import styles from './customStyling';
 
 import Input from '@material-ui/core/Input';
 import FolderIcon from '@material-ui/icons/Folder';
@@ -7,22 +8,13 @@ import YouTubeIcon from '@material-ui/icons/YouTube';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
+
 import axios from 'axios';
 import ThreeDots from 'three-dots';
 import ReactPlayer from 'react-player';
 import React, { useState, useRef  } from 'react';
 
 
-const styles = {
-  	videoPlayer: { backgroundColor: 'rgb(20, 10, 20)', borderRadius: '5px', display: 'block', 
-                margin: '15px auto', padding: '10px 10px', width: '70vw' },
-	resultViolent: { backgroundColor: 'white', borderRadius: '5px', border: "1px solid red", display: 'inline-block', 
-                margin: '15px auto', padding: '05px 0px', width: '35vw'},
-	resultNonViolent: { backgroundColor: 'white', borderRadius: '5px', border: "1px solid green", display: 'inline-block', 
-                margin: '15px auto', padding: '05px 0px', width: '35vw'},
-	statusProcessing: { backgroundColor: 'white', borderRadius: '5px', border: "1px solid lightslategrey", display: 'inline-block', 
-                margin: '15px auto', padding: '05px 0px', width: '35vw'},
-}
 
 function App() {
 	const [filepath, setVideoFileUrl] = useState("");
@@ -39,8 +31,6 @@ function App() {
 	const [timeOfViolence, setTimeOfViolence] = useState([]);
 	const [videoPlaying, setvideoPlaying] = useState(true);
 
-	const playerRef = useRef(null);
-	
 	// const restrictVideoPlaying = () => {
 	// 	setvideoPlaying(false);
 	// }
@@ -68,7 +58,7 @@ function App() {
 				form_data.append("hasVideo", true);
 				form_data.append("file", files[0]);
 
-				axios.post('http://localhost:5000/video', form_data, {
+				axios.post('http://127.0.0.1:5000/video', form_data, {
 					headers: {
 						'Content-Type': 'multipart/form-data',
 					}
@@ -98,7 +88,7 @@ function App() {
 				form_data.append("videoPath", event.target.value);
 				form_data.append("hasVideo", false);				
 
-				axios.post('http://localhost:5000/video', form_data, {
+				axios.post('http://127.0.0.1:5000/video', form_data, {
 					headers: {
 						'Content-Type': 'multipart/form-data',
 					}
@@ -160,10 +150,9 @@ function App() {
 		{(videoPlaying == true ) && (
 			<div>
 				<ReactPlayer 
-				ref={ playerRef }
 				id="videoPlayer" 
 				height= '45vh'
-				width= '95vh'
+				width= '92vh'
 				style={ styles.videoPlayer } 
 				url={ filepath } 
 				controls={ true } 

@@ -17,19 +17,16 @@ class ViolenceDetector:
         if videoType == "youtubeFile":
             video = pafy.new(path)
             best = video.getbest(preftype="mp4")
-            # print("= Youtube Video Best-URL = ", best.url)
             self.prepareDataset(best.url)         
         elif videoType == "folderFile":
-            "implement later"
             self.prepareDataset(path)
+
         self.predict(self.dataset)
         return (self.resultType, self.timeOfViolence)
 
 
-
     def prepareDataset(self, url):
         try:
-            # initialize the HOG descriptor/person detector
             hog = cv2.HOGDescriptor()
             hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
 
@@ -81,7 +78,6 @@ class ViolenceDetector:
             input_video_data = np.array(input_video_data).reshape(-1, 10, 100, 100, 3)
             input_video_data = input_video_data.astype(dtype=np.float32)/255
 
-            # trained_model_path = "model/ViolenceDetectionBD-20-9588.h5"
             trained_model_path = path.join(path.dirname(path.abspath(__file__)), "model", "ViolenceDetectionBD-20-9588.h5")
             cnn_bilstm_violence_model = tf.keras.models.load_model(trained_model_path)
 
@@ -94,22 +90,16 @@ class ViolenceDetector:
                     if pair[1] - pair[0] >= 0.965:
                         violence_flag = True
                         self.timeOfViolence.add( int( (self.frame_nums[frameIndex]/self.fps) / 60) )
-                        print(">> ", frameIndex, " ", self.frame_nums[frameIndex], " ", pair)
-                        
-                if violence_flag:
-                    self.resultType = "violent"
-                    print("\nThis video is VIOLENT")
-                else:
-                    self.resultType = "non-violent"
-                    print("\nThis video is NOT violent")
-                print(self.resultType, " - ", self.timeOfViolence)
+                        print(">> ", frameIndex, " ", self.frame_nums[frameIndex], " ", pair)                       
+
+                self.resultType = "violent" if violence_flag == True else "non-violent"
+                print("\nThis video is ", self.resultType, "\t Violence timestamps: ", list(self.timeOfViolence))
             else:
                 self.resultType = "non-violent"
-                print("\nThis video is NOT violent")
-                print(self.resultType, " - ", self.timeOfViolence)
+                print("\nThis video is ", self.resultType, "\t Violence timestamps: ", list(self.timeOfViolence))
 
         except Exception as err:
-            print("** Oops! Error in Prediction **\n", err)
+            print("** Oops! Error in Prediction! **\n", err)
 
 
 
@@ -121,6 +111,5 @@ if __name__ == "__main__":
     # https://www.youtube.com/watch?v=C0m1iTLbTUc
     # https://youtu.be/yACpDRmsXGU
     # https://youtu.be/mGtMPLzbaxo
-
     # model_path = path.join(path.dirname(path.abspath(__file__)), "model", "ViolenceDetectionBD-20-9588.h5")
     # print(path.exists(model_path))

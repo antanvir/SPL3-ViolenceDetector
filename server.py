@@ -10,8 +10,8 @@ CORS(app)
 
 
 @app.route("/", methods=["GET"])
-def get_example():
-    response = jsonify(message="Violence Detector backend server is running.")
+def hello():
+    response = jsonify(message="Hello! Violence Detector backend server is running.")
     return response
 
 
@@ -36,16 +36,17 @@ def post_video():
         resultType, timeOfViolence = detector.check_for_violence(videoType, videoPath)   
 
         if hasVideo == "true":
-            print("File should be REMOVED")
-            os.remove(videoPath)
-        response = jsonify({ "type": resultType, "timestamps": list(timeOfViolence) })
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
+            try:
+                os.remove(videoPath)
+                print("Temporary Video file has been REMOVED")
+            except:
+                print("- Exception in removing temp video file -")
+        return jsonify({ "type": resultType, "timestamps": list(timeOfViolence) })
 
     except Exception as err:
-        response = jsonify({ "type": "error", "timestamps": [] })
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
+        print(err)
+        return jsonify({ "status": "error", "timestamps": [] })
+
 
 
 if __name__ == "__main__":

@@ -31,9 +31,7 @@ function App() {
 	const [timeOfViolence, setTimeOfViolence] = useState([]);
 	const [videoPlaying, setvideoPlaying] = useState(true);
 
-	// const restrictVideoPlaying = () => {
-	// 	setvideoPlaying(false);
-	// }
+
 	const startVideoPlaying = () => {
 		setvideoPlaying(true);
 	}
@@ -42,41 +40,42 @@ function App() {
 		setvideoPlaying(true);
 		if(videoType == "folderFile"){
 			const { files } = event.target;
-			// console.log(files[0]);
-
-			let reader = new FileReader();
-			reader.readAsDataURL(files[0]);
-			reader.onload = (event) => {
-				// console.log(event.target.result);
-				setVideoFileUrl(event.target.result);
-				setResultStatus("processing");
-				setTimeOfViolence([]);
-
-				let form_data = new FormData();
-				form_data.append("videoType", videoType);
-				form_data.append("videoPath", "");
-				form_data.append("hasVideo", true);
-				form_data.append("file", files[0]);
-
-				axios.post('http://127.0.0.1:5000/video', form_data, {
-					headers: {
-						'Content-Type': 'multipart/form-data',
-					}
-				})
-				.then((response) => {
-					console.log(response.data);
-					let result = response.data;
-					setResultStatus(result.type);
-					setTimeOfViolence(result.timestamps);
-					if(result.type === "violent")	setvideoPlaying(false);
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+			try {
+				let reader = new FileReader();
+				reader.readAsDataURL(files[0]);
+				reader.onload = (event) => {
+					setVideoFileUrl(event.target.result);
+					setResultStatus("processing");
+					setTimeOfViolence([]);
+	
+					let form_data = new FormData();
+					form_data.append("videoType", videoType);
+					form_data.append("videoPath", "");
+					form_data.append("hasVideo", true);
+					form_data.append("file", files[0]);
+	
+					axios.post('http://127.0.0.1:5000/video', form_data, {
+						headers: {
+							'Content-Type': 'multipart/form-data',
+						}
+					})
+					.then((response) => {
+						console.log(response.data);
+						let result = response.data;
+						setResultStatus(result.type);
+						setTimeOfViolence(result.timestamps);
+						if(result.type === "violent")	setvideoPlaying(false);
+					})
+					.catch((error) => {
+						console.log(error);
+					});
+				}
+				
+			} catch (error) {
+				console.log(error);
 			}
 		}
 		else{
-			// console.log(ReactPlayer.canPlay(event.target.value));
 			let videoPlayable = ReactPlayer.canPlay(event.target.value);
 			if (videoPlayable) {   
 				setVideoFileUrl(event.target.value);
@@ -125,7 +124,6 @@ function App() {
 		<div className="App">
 		<div id="navbar" style={ {backgroundColor: 'rgb(239, 241, 241)'} }>
 			<header className="App-header">
-				{/* <img src={logo} className="App-logo" alt="logo" />  */}
 				<b> ViolenceDetector </b> 
 			</header>
 			<hr/>
@@ -164,14 +162,13 @@ function App() {
 			<div style={ { backgroundColor: 'rgb(20, 10, 20)', borderRadius: '5px', display: 'block', 
 				margin: '15px auto', padding: '10px 10px', height: '40vh', width: '80vh' } }>
 				<p style={ {color: "white", paddingTop: "1vh"} }>
-					 {/* This video has been detected as violent. <br/> 
-					 Hence, automatic playing is stopped. */}
 					 Automatic playing is STOPPED as <br/>
 					 the video has been detected as VIOLENT.
 				</p>
 				<button onClick={ startVideoPlaying }> I Understand & Wish to Proceed </button>
 			</div>
 		)}
+
 		{(resultStatus === "processing") && (
 				<div style={ styles.statusProcessing }>
 					<h3 style={ {color: "lightslategrey", display: ""} }> Processing Video... </h3>
@@ -192,14 +189,11 @@ function App() {
 
 		{ (timeOfViolence.length !== 0) && < ResultProvider timeOfViolence= {timeOfViolence} /> }
 		
-		{/*  EXTRA BUTTON FOR TESTING PURPOSE ONLY */}
-		{/* <div> 
-			<button onClick={ restrictVideoPlaying }> hide video </button>
-		</div> */}
 
 		<div>
 			<br/> <br/>
 		</div>
+
 		<footer style={ {backgroundColor: 'rgb(235, 241, 241)', bottom: '10px', position: "relative"} }>
 			<center><small> <span> &copy; </span> <i><b> A. N. Tanvir | SPL - 03 | 2020 - 21 </b></i> </small></center>
 		</footer>

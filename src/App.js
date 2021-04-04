@@ -201,7 +201,7 @@ function App() {
 			<br/> <br/>
 		</div>
 		<footer style={ {backgroundColor: 'rgb(235, 241, 241)', bottom: '10px', position: "relative"} }>
-			<center><small> <span> &copy; </span> <i><b> A. N. Tanvir | SPL- 03 | 2020 </b></i> </small></center>
+			<center><small> <span> &copy; </span> <i><b> A. N. Tanvir | SPL- 03 | 2020-21 </b></i> </small></center>
 		</footer>
 
 		</div>
